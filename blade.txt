@@ -1,0 +1,32 @@
+{{ $var }}是会转义html语义的
+不需要转义HTML的话，可以使用 {!! $var !!}
+
+main.blade.php
+ @yield('content')位置供我们填充内容
+
+about.blade.php
+    @extends('main')
+    @section('content')
+        <h1>About me</h1>
+        <p>{{ $first }}, {{ $second }}</p>
+    @stop
+
+
+@yield 不能被扩展，所以即使加上了 @parent 也不起作用
+@section 定义的部分，由于使用了 @parent 关键字，父模板中的内容会被保留，
+然后再扩展后添加的内容进去
+@show 指的是执行到此处时将该 section 中的内容输出到页面
+@include('view.name'):包含子视图
+
+
+在blade模版中，我们可以使用@if进行条件判断
+    @if ($first == 'John')
+        <h1>Hi, John</h1>
+    @else
+        <h1>Else</h1>
+    @endif
+
+除了@if外，还可以使用@unless(相当于 if !)、@foreach、@forelse(@foreach循环数组为空时)等。
+        @foreach ($people as $person)
+            <li>{{ $person }}</li>
+        @endforeach

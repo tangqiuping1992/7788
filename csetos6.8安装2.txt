@@ -1,0 +1,168 @@
+1.Apache: yum install httpd
+  加入开机启动: chkconfig httpd on
+  启动 : service httpd start
+  重启 : service httpd restart;
+
+2.Mysql安装 ： 
+ 	（1）下载: 
+		下载mysql5.6 rpm包 包含几个程序的合集包：
+		wget http://dev.mysql.com//Downloads/MySQL-5.6/MySQL-5.6.35-1.el6.x86_64.rpm-bundle.tar
+		下载Mysql共享包,包括MySQL 3.23和MySQL 4.0的共享库
+		wget http://dev.mysql.com//Downloads/MySQL-5.6/MySQL-shared-compat-5.6.35-1.el6.x86_64.rpm
+			
+	（2）安装：
+		1.检查是否安装有mysql库：
+		   rpm -qa | grep -i mysql
+		   卸载以前版本:yum remove 文件	
+		   完全卸载用 :rpm -e --nodeps ...
+		2. 开始安装
+			tar -xvf MySQL-5.6.35-1.el6.x86_64.rpm-bundle.tar
+
+		   rpm -ivh MySQL-server-5.6.27-1.linux_glibc2.5.x86_64.rpm
+		   rpm -ivh MySQL-devel-5.6.27-1.linux_glibc2.5.x86_64.rpm
+		   rpm -ivh MySQL-client-5.6.27-1.linux_glibc2.5.x86_64.rpm
+
+		注意：如果出现错误 
+			warning: MySQL-server-5.6.27-1.linux_glibc2.5.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY
+    			error: Failed dependencies:
+        			/usr/bin/perl is needed by MySQL-server-5.6.27-1.linux_glibc2.5.x86_64（发现缺少依赖）
+			则尝试安装：yum install numactl  
+				    yum install libaio 
+				    yum install perl
+		
+	（3）启动:
+		1.修改配置文件位置:cp /usr/share/mysql/my-default.cnf /etc/my.cnf
+		2.初始化数据库 :运行/usr/bin/mysql_install_db
+		3.启动数据库：service mysql start
+		4.修改密码 ：
+		  查看rootp密码:cat /root/.mysql_secret
+			得到所示的密码The random password set for the root user at Wed Dec 16 05:31:22 2015 (local time): GkrEoaVae22gNoSR
+		  登录数据库：mysql -uroot -pGkrEoaVae22gNoSR
+		  修改root密码 ：SET PASSWORD = PASSWORD('123456');
+		5.重新登录: mysql -uroot -p123456;
+			show databases;
+		6.设置远程登录:use mysql;
+			select host,user,password from user;
+			update user set password=password('123456') where user='root';
+			update user set host='%' where user='root' and host='localhost';
+			flush privileges;
+		7.设置开机启动： chkconfig mysql on
+			查看mysql启动:chkconfig --list | grep  mysql
+
+3.php 安装
+
+	强制删除 rpm -qa|grep php
+		wget  http://ftp.ntu.edu.tw/php/distributions/php-5.6.30.tar.gz
+	3.1 安装源：
+		rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+	3.2 yum list | grep php56
+	3.3 安装php依赖
+		yum install --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof
+	注意出现安装不起或者出现NOKEY时：rpm --import /etc/pki/rpm-gpg/RPM*
+
+4 composer安装
+	
+	4.1 curl -sS https://getcomposer.org/installer | php
+	
+	4.2 移动到目录下可执行
+	    mv composer.phar /usr/local/bin/composer
+
+5：安装nodejs
+	两种方法：
+	  （一）：
+		5.1：下载
+	   		wget https://nodejs.org/dist/v6.9.4/node-v6.9.4-linux-x64.tar.gz
+		5.2 解压
+	   		tar xvf node-v6.9.4-linux-x64.tar.gz
+		5.3 移动到/usr/local/node
+	   		mv node-v6.9.4-linux-x64 /usr/local/node
+	  (二)：
+		详情见：http://www.cnblogs.com/dee0912/p/5272149.html页面
+
+
+
+https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-amazon-3.4.1.tgz
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.2.11.tgz
+
+
+
+
+
+
+
+
+
+
+
+
+MySql5.6安装：
+	使用rpm安装：
+	（1）、wget http://repo.mysql.com/mysql-community-release-el6-5.noarch.rpm
+	（2）、rpm -ivh mysql-community-release-el6-5.noarch.rpm
+	（3）、yum install mysql-community-server
+	（4）、service mysqld start
+
+
+
+
+
+
+MySql编译安装步骤：
+	（1）、安装cmake：下载地址：http://www.cmake.org/files/v3.9/cmake-3.9.2.tar.gz（最新版）
+		解压cmake：tar zxvf cmake-3.9.2.tar.gz 放在/usr/local/src/目录下
+		编译cmake：./bootstrap   、 make 、 make install；
+		完成查看cmake：cmake -version
+	（2）、安装mysql
+		groupadd mysql #添加mysql组
+
+		useradd -g mysql mysql -s /bin/false #创建用户mysql并加入到mysql组，不允许mysql用户直接登录系统
+
+		mkdir -p /data/mysql #创建MySQL数据库存放目
+
+		chown -R mysql:mysql /data/mysql #设置MySQL数据库目录权限
+
+		mkdir -p /usr/local/mysql #创建MySQL安装目录
+
+		Cmake编译：cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EXTRA_CHARSETS=all -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_MEMORY_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DENABLED_LOCAL_INFILE=1 -DMYSQL_DATADIR=/data/mysql -DMYSQL_USER=mysql -DMYSQL_TCP_PORT=3306 -DSYSCONFDIR=/etc -DINSTALL_SHAREDIR=share
+（可参考文章http://xcd9898.blog.163.com/blog/static/16887428201312622936938/）
+
+		出现Curses library not found.  Please install appropriate package时安装：yum install ncurses-devel，然后删除CMakeCache.txt文件	删除后执行Cmake编译；
+		完成后执行make 和 make install
+		下一步：1.chmod +w /usr/local/mysql/
+			2.chown -R mysql:mysql /usr/local/mysql/
+			3.ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18
+			4.mkdir -p /var/mysql
+			5.mkdir -p /var/mysql/data/
+			6.mkdir -p /var/mysql/log/
+			7.chown -R mysql:mysql /var/mysql/
+		下一步：cd support-files/ 
+			1.cp my-medium.cnf /etc/my.cnf
+			2.cp mysql.server /etc/init.d/mysql
+		下一步：初始化安装
+			/usr/local/mysql/scripts/mysql_install_db  --defaults-file=/etc/my.cnf  --basedir=/usr/local/mysql --datadir=/var/mysql/data --user=mysql
+		下一步：1.chkconfig --add mysql
+			2.chkconfig --level 345 mysql on
+		下一步：service mysql start
+			使用mysql出现-bash: mysql: command not found则使用/usr/local/mysql/bin/mysql -uroot mysql执行即可
+			也可以建立软链接使用ln -s /usr/local/mysql/bin/mysql /usr/bin执行mysql也可使用
+		
+
+
+编译安装php：
+	tar zxvf php-5.5.7.tar.gz
+
+	cd php-5.5.7
+
+	mkdir -p /usr/local/php5
+
+	./configure --prefix=/usr/local/php5 --with-config-file-path=/usr/local/php5/etc --with-mysql=/usr/local/mysql --with-mysqli=/usr/local/mysql/bin/mysql_config 	--with-mysql-sock=/tmp/mysql.sock --with-gd --with-iconv --with-zlib --enable-xml --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization 	--enable-mbregex --enable-fpm --enable-mbstring --enable-ftp --enable-gd-native-ttf --with-openssl --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip 	--enable-soap --without-pear --with-gettext --enable-session --with-mcrypt --with-curl --with-jpeg-dir=/usr/local/jpeg6/ --with-png-dir=/usr/local/png --with-	freetype-dir=/usr/local/freetype
+
+	出现libmcrypt未安装
+		①安装第三方yum源
+		wget http://www.atomicorp.com/installers/atomic
+		sh ./atomi	c	
+		②使用yum命令安装
+		yum  install  php-mcrypt  libmcrypt  libmcrypt-devel
+	其他错误提示参考（http://www.cnblogs.com/z-ping/archive/2012/06/18/2553929.html）
+

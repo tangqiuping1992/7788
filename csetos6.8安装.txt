@@ -1,0 +1,87 @@
+1.Apache: yum install httpd
+  加入开机启动: chkconfig httpd on
+  启动 : service httpd start
+  重启 : service httpd restart;
+
+2.Mysql安装 ： 
+ 	（1）下载: 
+		下载mysql5.6 rpm包 包含几个程序的合集包：
+		wget http://dev.mysql.com//Downloads/MySQL-5.6/MySQL-5.6.35-1.el6.x86_64.rpm-bundle.tar
+		下载Mysql共享包,包括MySQL 3.23和MySQL 4.0的共享库
+		wget http://dev.mysql.com//Downloads/MySQL-5.6/MySQL-shared-compat-5.6.35-1.el6.x86_64.rpm
+			
+	（2）安装：
+		1.检查是否安装有mysql库：
+		   rpm -qa | grep -i mysql
+		   卸载以前版本:yum remove 文件	
+		   完全卸载用 :rpm -e --nodeps ...
+		2. 开始安装
+			tar -xvf MySQL-5.6.35-1.el6.x86_64.rpm-bundle.tar
+
+		   rpm -ivh MySQL-server-5.6.27-1.linux_glibc2.5.x86_64.rpm
+		   rpm -ivh MySQL-devel-5.6.27-1.linux_glibc2.5.x86_64.rpm
+		   rpm -ivh MySQL-client-5.6.27-1.linux_glibc2.5.x86_64.rpm
+
+		注意：如果出现错误 
+			warning: MySQL-server-5.6.27-1.linux_glibc2.5.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY
+    			error: Failed dependencies:
+        			/usr/bin/perl is needed by MySQL-server-5.6.27-1.linux_glibc2.5.x86_64（发现缺少依赖）
+			则尝试安装：yum install numactl  
+				    yum install libaio 
+				    yum install perl
+		
+	（3）启动:
+		1.修改配置文件位置:cp /usr/share/mysql/my-default.cnf /etc/my.cnf
+		2.初始化数据库 :运行/usr/bin/mysql_install_db
+		3.启动数据库：service mysql start
+		4.修改密码 ：
+		  查看rootp密码:cat /root/.mysql_secret
+			得到所示的密码The random password set for the root user at Wed Dec 16 05:31:22 2015 (local time): GkrEoaVae22gNoSR
+		  登录数据库：mysql -uroot -pGkrEoaVae22gNoSR
+		  修改root密码 ：SET PASSWORD = PASSWORD('123456');
+		5.重新登录: mysql -uroot -p123456;
+			show databases;
+		6.设置远程登录:use mysql;
+			select host,user,password from user;
+			update user set password=password('123456') where user='root';
+			update user set host='%' where user='root' and host='localhost';
+			flush privileges;
+		7.设置开机启动： chkconfig mysql on
+			查看mysql启动:chkconfig --list | grep  mysql
+
+3.php 安装
+
+	强制删除 rpm -qa|grep php
+		wget  http://ftp.ntu.edu.tw/php/distributions/php-5.6.30.tar.gz
+
+	3.1 安装源：
+		rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+	3.2 yum list | grep php56
+	3.3 安装php依赖
+		yum install --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof
+	注意出现安装不起或者出现NOKEY时：rpm --import /etc/pki/rpm-gpg/RPM*
+
+4 composer安装
+	
+	4.1 curl -sS https://getcomposer.org/installer | php
+	
+	4.2 移动到目录下可执行
+	    mv composer.phar /usr/local/bin/composer
+
+5：安装nodejs
+	两种方法：
+	  （一）：
+		5.1：下载
+	   		wget https://nodejs.org/dist/v6.9.4/node-v6.9.4-linux-x64.tar.gz
+		5.2 解压
+	   		tar xvf node-v6.9.4-linux-x64.tar.gz
+		5.3 移动到/usr/local/node
+	   		mv node-v6.9.4-linux-x64 /usr/local/node
+	  (二)：
+		详情见：http://www.cnblogs.com/dee0912/p/5272149.html页面
+
+
+
+https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-amazon-3.4.1.tgz
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.2.11.tgz

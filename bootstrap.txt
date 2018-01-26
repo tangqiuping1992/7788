@@ -1,0 +1,402 @@
+table
+.table: 一个只带有内边距（padding）和水平分割的基本表
+.table-striped: 交替单元格的背景色
+.table-bordered: 带边框的表格
+.table-hover: 启用鼠标悬停状态
+.table-condensed: 让表格更加紧凑
+.table-responsive: 响应式表格
+img
+.img-circle: 圆形img
+.img-rounded: border-radius:6px 来获得图片圆角
+.img-thumbnail：添加一些内边距（padding）和一个灰色的边框
+.img-responsive: 响应式图像
+
+媒体查询
+/* 超小设备（手机，小于 768px）.col-xs-*/
+/* Bootstrap 中默认情况下没有媒体查询 */
+/* 小型设备（平板电脑，768px 起） .col-sm- */
+@media (min-width: @screen-sm-min) { ... }
+/* 中型设备（台式电脑，992px 起） .col-md- */
+@media (min-width: @screen-md-min) { ... }
+/* 大型设备（大台式电脑，1200px 起） .col-lg- */  
+@media (min-width: @screen-lg-min) { ... }  
+
+偏移量
+.col-md-offset-* ....
+
+嵌套列
+.row
+
+列排序
+.col-md-push-*：往后移几格
+.col-md-pull-*：往前移几格
+
+标题 - 副标题
+.small / <small></small>
+
+p
+.lead: 给段落添加强调文本
+.text-left/.text-center/.text-right/.text-muted/.text-primary/
+.text-success/.text-success/.text-warning/.text-danger
+.text-justify：设定文本对齐,段落中超出屏幕部分文字自动换行
+.text-nowrap：段落中超出屏幕部分不换行
+.text-lowercase/.text-uppercase: 设定文本大小写
+.text-capitalize：设定单词首字母大写
+.help-block: 块级帮助
+
+缩写abbr  title
+.initialism: 得到一个更小字体的文本
+
+Blockquote 引用
+small标签：标识引用的来源
+.pull-right：向右对齐的引用
+
+列表
+.list-unstyled: 移除无序列表的样式
+.list-inline: 内联列表
+.dl-horizontal: 水平的定义列表
+
+pre
+.pre-scrollable: 使 <pre> 元素可滚动，代码块区域最大高度为340px
+
+kbd: 按键提示
+code: 同一行代码片段
+
+表单
+<form role="form">: 基本的表单结构
+.form-inline: 内联表单，向左对齐的，标签是并排的
+把标签和控件放在一个带有 class .form-group 的 <div>中 
+向所有的文本元素 <input>、<textarea> 和 <select> 添加 class ="form-control"
+.sr-only: 隐藏内联表单的标签 
+水平表单：
+向父 <form> 元素添加 class .form-horizontal。
+把标签和控件放在一个带有 class .form-group 的 <div> 中。
+向标签添加 class .control-label:   //text-align: right
+
+.radio-inline/ .checkbox-inline: 控制它们显示在同一行上
+select:  multiple="multiple"  允许用户选择多个选项
+静态控件： 需要在一个水平表单内的表单标签后放置纯文本时，请在 <p> 上使用 class .form-control-static
+input disabled: 输入框禁止输入
+对父级设定.has-warning、 .has-error 或 .has-success：  可使用验证状态
+<fieldset disabled> ： 里面的控件都禁用
+input/select: .input-lg/.input-sm
+
+按钮
+.btn/.btn-default/.btn-primary/.btn-success/.btn-info/.btn-warning/.btn-danger/
+.btn-link/.btn-lg/.btn-sm/.btn-xs/.btn-block/.active/.disabled
+在a、button、input元素上都可以使用以上的class
+
+文本
+.text-muted : color: #777; 
+.text-primary: color: #337ab7;
+..text-success/.text-info/.text-warning/.text-danger
+
+背景
+.bg-primary/.bg-success/.bg-info/.bg-warning/.bg-danger
+
+其他
+.pull-left/.pull-right: 元素浮动到左边/右边
+.center-block: 设置元素为 display:block 并居中显示
+.clearfix: 清除浮动
+.show/.hidden: 强制元素显示/隐藏
+.sr-only: 除了屏幕阅读器外，其他设备上隐藏元素
+.sr-only-focusable: 与 .sr-only 类结合使用，在元素获取焦点时显示(如：键盘操作的用户)
+.text-hide: 将页面元素所包含的文本内容替换为背景图
+.close: 显示关闭按钮
+.caret: 显示下拉式功能 小三角
+
+响应式实用工具
+.visible-*-block (xs sm md lg)
+.visible-*-inline
+.visible-*-inline-block
+.hidden-xs/.hidden-sm/.hidden-md/.hidden-lg
+.visible-xs/.visible-sm/.visible-md/.visible-lg
+
+字体图标(Glyphicons)
+
+下拉菜单
+.dropdown: 指定下拉菜单，下拉菜单都包裹在 .dropdown 里
+.dropdown-menu: 创建下拉菜单
+.dropdown-menu-right: 下拉菜单右对齐
+.dropdown-header: 下拉菜单中添加标题
+.dropup: 指定向上弹出的下拉菜单
+.disabled: 下拉菜单中的禁用项
+.divider: 下拉菜单中的分割线
+<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+		主题
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#">Java</a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#">数据挖掘</a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#">数据通信/网络</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#">分离的链接</a>
+		</li>
+	</ul>
+</div>
+
+按钮组
+.btn-group： 在 .btn-group 中放置一系列带有 class .btn 的按钮。
+.btn-toolbar： 把几组 <div class="btn-group"> 结合到一个 <div class="btn-toolbar"> 中
+.btn-group-lg, .btn-group-sm, .btn-group-xs： 应用到整个按钮组的大小调整
+.btn-group-vertical：让一组按钮垂直堆叠显示
+
+输入框组
+把前缀或后缀元素放在一个带有 class .input-group 的 <div> 中；（.input-group-lg/.input-group-sm）
+在 class 为 .input-group-addon 的 <span> 内放置额外的内容；(.input-group-btn:把按钮作为输入框组的前缀或者后缀元素)
+把该 <span> 放置在 <input> 元素的前面或者后面。
+<div class="input-group">
+	<span class="input-group-addon">@</span>
+	<input type="text" class="form-control" placeholder="twitterhandle">
+</div>
+
+导航元素
+以一个带有 class .nav 的无序列表ul开始
+给ul添加 class .nav-tabs：表格导航
+给ul添加 class .nav-pills ：胶囊式的导航菜单
+给ul添加 class .nav-stacked ：胶囊垂直堆叠的导航菜单
+给ul添加 class .nav-justified ：两端对齐的导航
+给li添加class .disabled: 导航元素中的禁用链接
+.tab-content： 与 .tab-pane 和 data-toggle="tab" (data-toggle="pill" ) 一同使用, 设置标签页对应的内容随标签的切换而更改
+.tab-pane: 与 .tab-content 和 data-toggle="tab" (data-toggle="pill")一同使用, 设置标签页对应的内容随标签的切换而更改
+ <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">首页</a></li>
+    <li><a data-toggle="tab" href="#menu1">菜单 1</a></li>
+ </ul>
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <h3>首页</h3>
+      <p>菜鸟教程 —— 学的不仅是技术，更是梦想！！！</p>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>菜单 1</h3>
+      <p>这是菜单 1 显示的内容。这是菜单 1 显示的内容。这是菜单 1 显示的内容。</p>
+    </div>
+  </div>
+  
+导航栏
+向 <nav> 标签添加 class .navbar、.navbar-default。
+向上面的元素添加 role="navigation"，有助于增加可访问性
+向 <div> 元素添加一个标题 class .navbar-header，内部包含了带有 class navbar-brand 的 <a> 元素。这会让文本看起来更大一号。
+为了向导航栏添加链接，只需要简单地添加带有 class .nav、.navbar-nav 的无序列表即可。
+.navbar-form : 导航栏中的表单 
+.navbar-btn: 导航栏中的按钮
+.navbar-text: 导航栏中的文本
+.navbar-left/.navbar-right: 组件对齐方式
+.navbar-fixed-top/.navbar-fixed-bottom: 固定到底部
+.navbar-static-top: 静态的顶部
+.navbar-inverse： 反色的导航栏
+
+面包屑导航：一个简单的带有 .breadcrumb class 的无序列表
+
+标签
+.label 
+.label-default/.label-primary/.label-success/.label-info/.label-warning/.label-danger
+
+徽章
+.badge
+
+超大屏幕
+.jumbotron
+
+页面标题
+.page-heade
+small: 子标题
+
+警告
+.alert
+.alert-success/.alert-info/.alert-warning/.alert-danger
+可取消的警告
+.alert.alert-dismissable
+添加一个关闭按钮button class="close" data-dismiss="alert"
+警告中的链接
+a class="alert-link": 匹配各颜色的链接
+
+进度条
+div class="progress"  .progress-striped；条纹进度条    active: 动态进度条
+在上面的div内添加div class="progress-bar" style="width: 20%"  (progress-bar-success/info/warning/danger)
+把多个progress-bar放进progress里即可堆叠进度条
+
+多媒体对象
+.media: 允许将媒体对象里的多媒体（图像、视频、音频）浮动到内容区块的左边或者右边
+.media-left/.media-right: .media-right应该放在.media-body后面才能右浮动  浮动的图片等
+.media-body: 嵌套的内容
+ .media-heading:嵌套的媒体标题
+.media-list: 媒体对象列表
+
+列表组
+ul/div .list-group
+li/a .list-group-item active
+span .badge
+.list-group-item-heading
+.list-group-item-text
+
+面板
+div .panel .panel-default/.panel-primary/.panel-success/.panel-info/.panel-warning/.panel-danger
+ div .panel-heading
+ 	h3 .pael-title
+ div .panel-body
+ div .panel-footer
+ 
+well :凹陷显示或插图效果的容器 <div>
+.well .well-lg/.well-sm
+
+模拟框插件
+模拟框：子窗体
+用法：
+1、通过 data 属性：在控制器元素（比如按钮或者链接）上设置属性 data-toggle="modal"，
+      同时设置 data-target="#identifier" 或 href="#identifier" 来指定要切换的特定的模态框（带有 id="identifier"）。
+2、通过 JavaScript：使用这种技术，您可以通过简单的一行 JavaScript 来调用带有 id="identifier" 的模态框
+模拟框
+div .modal .fade: 有淡入淡出的效果  
+	aria-labelledby="myModalLabel"：引用模拟框的标题
+ div .modal-dialog
+  div .modal-content
+   div .modal-header
+    div .modal-title
+   div .modal-body
+   div .modal-footer  
+关闭按钮的属性data-dismiss="modal"，用于关闭模拟窗口
+方法:$('#identifier').modal({keyboard: false})
+	$('#identifier').modal('toggle')
+	$('#identifier').modal('show')
+	$('#identifier').modal('hide')
+事件：绑定on
+	show.bs.modal:在调用 show 方法后触发。
+	shown.bs.modal:当模态框对用户可见时触发（将等待 CSS 过渡效果完成）。
+	hide.bs.modal:当调用 hide 实例方法时触发。
+	hidden.bs.modal:当模态框完全对用户隐藏时触发。
+	
+下拉菜单插件
+div .dropdown
+ button/a  .dropdown-toggle id="dLabel"  data-toggle="dropdown" data-target="#"/href="#"
+ ul .dropdown-menu aria-labelledby="dLabel"
+$('.dropdown-toggle').dropdown('toggle')
+
+监听滚动插件
+通过 data 属性：向您想要监听的元素（通常是 body）添加 data-spy="scroll"。然后添加带有 Bootstrap .nav 组件的父元素的 ID 或 class 的属性 data-target。
+为了它能正常工作，您必须确保页面主体中有匹配您所要监听链接的 ID 的元素存在。
+<body data-spy="scroll" data-target=".navbar-example">
+通过 JavaScript：您可以通过 JavaScript 调用滚动监听，选取要监听的元素，然后调用 .scrollspy() 函数：
+$('body').scrollspy({ target: '.navbar-example' })
+
+标签页(Tab)插件
+通过 data 属性：您需要添加 data-toggle="tab" 或 data-toggle="pill" 到锚文本链接中。
+添加 nav 和 nav-tabs 类到 ul 中，将会应用 Bootstrap 标签样式，添加 nav 和 nav-pills 类到 ul 中，将会应用 Bootstrap 胶囊式样式。
+<ul class="nav nav-tabs">
+    <li><a href="#identifier" data-toggle="tab">Home</a></li>
+    ...
+</ul>
+通过 JavaScript：您可以使用 Javscript 来启用标签页，如下所示：
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+ $('#myTab a:last').tab('show')
+淡入淡出效果
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="home">...</div>
+    <div class="tab-pane fade" id="svn">...</div>
+    <div class="tab-pane fade" id="ios">...</div>
+    <div class="tab-pane fade" id="java">...</div>
+</div>
+事件
+show.bs.tab：事件在标签页显示时触发，但是必须在新标签页被显示之前。分别使用event.target 和 event.relatedTarget 来定位到激活的标签页和前一个激活的标签页
+shown.bs.tab：该事件在标签页显示时触发，但是必须在某个标签页已经显示之后。分别使用 event.target 和 event.relatedTarget 来定位到激活的标签页和前一个激活的标签页。
+
+提示工具(Tooltip)插件
+通过 data 属性：如需添加一个提示工具（tooltip），只需向一个锚标签添加 data-toggle="tooltip" 即可。锚的 title 即为提示工具（tooltip）的文本。默认情况下，插件把提示工具（tooltip）设置在顶部。
+<a href="#" data-toggle="tooltip" title="Example tooltip">请悬停在我的上面</a>
+通过 JavaScript：通过 JavaScript 触发提示工具（tooltip）：
+$('#identifier').tooltip(options)
+必须激活：$(function () { $("[data-toggle='tooltip']").tooltip(); });
+data-placement="bottom/left/right/top"  方向
+方法
+$('#element').tooltip('toggle')
+$('#element').tooltip('show')
+$('#element').tooltip('hide')
+$('#element').tooltip('destroy')
+事件
+show.bs.tooltip
+shown.bs.tooltip
+shown.bs.tooltip
+hidden.bs.tooltip	
+
+弹出框（Popover）插件
+通过 data 属性：如需添加一个弹出框（popover），只需向一个锚/按钮标签添加 data-toggle="popover" 即可。锚的 title 即为弹出框（popover）的文本。默认情况下，插件把弹出框（popover）设置在顶部。
+<a href="#" data-toggle="popover" title="Example popover">
+    请悬停在我的上面
+</a>
+通过 JavaScript：通过 JavaScript 启用弹出框（popover）：
+$('#identifier').popover(options)
+必须激活：$(function () { $("[data-toggle='popover']").popover(); });
+data-placement="bottom/left/right/top"：指定方向
+title：弹出框的title
+data-content：弹出框的内容
+方法
+$(function () { $('.popover-show').popover('show');});
+$(function () { $('.popover-hide').popover('hide');});
+$(function () { $('.popover-destroy').popover('destroy');});
+$(function () { $('.popover-toggle').popover('toggle');});
+$(function () { $(".popover-options a").popover({html : true });});
+事件
+show.bs.popover
+shown.bs.popover
+shown.bs.popover
+hidden.bs.popover	
+
+警告框(alert)插件
+通过 data 属性：通过数据 API（Data API）添加可取消功能，只需要向关闭按钮添加 data-dismiss="alert"，就会自动为警告框添加关闭功能。
+<a class="close" data-dismiss="alert" href="#" aria-hidden="true">
+    &times;
+</a>
+通过 JavaScript：通过 JavaScript 添加可取消功能：
+$(".alert").alert()
+.alert .fade .in ： 关闭时有动画效果
+.alert-warning/success/danger...
+$(".alert").alert('close'); 关闭所有alert框
+事件
+close.bs.alert : 当调用 close 实例方法时立即触发该事件。
+closed.bs.alert : 当警告框被关闭时触发该事件（将等待 CSS 过渡效果完成）。
+$('#myalert').bind('closed.bs.alert', function () {
+    // 执行一些动作...
+})
+
+按钮(button)插件
+$('.btn').button(): 启动button插件
+单个切换：data-toggle="button"
+复选框：  btn-group 添加 ddata-toggle="buttons"  .btn 里的input type="checkbox"
+单选按钮： btn-group 添加  data-toggle="buttons"  .btn 里的input type="radio"
+方法
+$().button('toggle')
+$().button('loading')：当加载时，按钮是禁用的，且文本变为 button 元素的 data-loading-text 属性的值。
+$().button('reset')
+$().button('string')
+
+折叠(Collapse)插件
+div .panel-group #accordion
+	a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"  点击的链接 
+	div #collapseOne .panel-collapse.collapse.in
+data-toggle="collapse" 添加到您想要展开或折叠的组件的链接上。
+href 或 data-target 属性添加到父组件，它的值是子组件的 id。
+data-parent 属性把折叠面板（accordion）的 id 添加到要展开或折叠的组件的链接上。
+$('.collapse').collapse() ： 激活 collapse 方法
+方法
+.collapse(options)
+.collapse('toggle')
+.collapse('show')
+.collapse('hide')
+事件
+show.bs.collapse
+shown.bs.collapse
+hide.bs.collapse
+hidden.bs.collapse

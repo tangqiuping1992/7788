@@ -1,0 +1,14 @@
+安装laravel命令：
+composer create-project laravel/laravel laravel5 "~5.0.0" --prefer-dist
+
+在laravel安装目录下运行
+
+
+进入artisan：    
+	php artisan
+创建控制器： 
+	php artisan make:controller PagesController
+创建一个简洁的控制器：    
+	php artisan make:controller PagesController --plain
+查看命令执行带的参数：
+	    php artisan help make:controller

@@ -1,0 +1,794 @@
+Laravel项目目录结构
+
+顶级
+app
+  	 MVC  assets
+bootstrap
+	系统启动时需要的文件
+public 
+	index.php css javascript images
+vendor
+	第三方代码 源码及其相关 插件
+
+app文件夹详细信息
+app/config
+	/app.php 时区、 区域、 调试模式、 加密密钥
+	/auth.php 身份验证驱动程序 
+	/cache.php 利用缓存来加快响应时间
+	/database.php 数据库配置
+	/mail.php 电子邮件发件引擎配置 SMTP服务器、From： 标头
+	/session.php 用户sessions,即session driver, session lifetime
+	/view.php 模板系统的杂项配置
+
+
+/app/controllers 控制器类
+
+/app/database
+	       /migrations/
+	       /seeds/
+
+/app/lang  语言包
+
+/app/models 模型
+
+/app/views 视图
+
+/app/routes.php 路由规则  几个事件声明，包括错误页的，可以用于定义视图的composers
+
+/app/filters.php 各种应用程序和路由筛选方法
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+CSRF 保护
+
+插入 CSRF Token 到表单
+<input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+在 Blade 模板引擎使用
+<input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+
+$action = Route::currentRouteAction();方法来获取正在执行的控制器行为名称：
+
+
+控制器中间件
+
+中间件 可在控制器路由中指定：
+Route::get('profile', [
+    'middleware' => 'auth',
+    'uses' => 'UserController@showProfile'
+]);
+
+在控制器构造器中指定中间件 ：
+class UserController extends Controller {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('log', ['only' => ['fooAction', 'barAction']]);
+        $this->middleware('subscribed', ['except' => ['fooAction', 'barAction']]);
+    }
+}
+
+
+Route::controller 方法定义一个路由：
+Route::controller('users', 'UserController');
+如果你想“命名”一些控制器的路由，你可以给 controller 方法传入第三个参数：
+Route::controller('users', 'UserController', [
+    'anyLogin' => 'user.login',
+]);
+
+
+
+如果你的控制器行为包含多个字词，你可以在 URI 中使用「破折号」语法来访问此行为
+
+
+RESTful 资源控制器
+make:controller Artisan 命令，快速创建这样的控制器：
+php artisan make:controller PhotoController
+接着，我们注册一个指向此控制器的资源路由：
+Route::resource('photo', 'PhotoController');
+
+
+
+---------------------------------------------请求-------------------------------------------------------
+取得输入数据
+$name = Request::input('name');
+取得特定输入数据，若没有则取得默认值
+$name = Request::input('name', 'Sally');
+确认是否有输入数据：
+if (Request::has('name'))
+{
+    //
+}
+
+取得所有发出请求时传入的输入数据
+$input = Request::all();
+
+取得部分发出请求时传入的输入数据
+$input = Request::only('username', 'password');
+$input = Request::except('credit_card');
+
+如果是「数组」形式的输入数据，可以使用「点」语法取得数组：
+$input = Request::input('products.0.name');
+
+
+将输入数据存成一次性 Session
+flash 方法会将当前的输入数据存进 session中，所以下次用户发出请求时可以使用保存的数据：
+Request::flash();
+
+将部分输入数据存成一次性 Session
+Request::flashOnly('username', 'email');
+Request::flashExcept('password');
+
+快闪及重定向
+return redirect('form')->withInput();
+return redirect('form')->withInput(Request::except('password'));
+
+取得前一次请求所保存的一次性 Session
+$username = Request::old('username');
+Blade 模板显示旧输入数据{{ old('username') }}
+
+
+取得 Cookie 值
+$value = Request::cookie('name');
+
+加上新的 Cookie 到响应
+$response = new Illuminate\Http\Response('Hello World');
+$response->withCookie(cookie('name', 'value', $minutes));
+
+建立永久有效的 Cookie*
+$response->withCookie(cookie()->forever('name', 'value'));
+
+
+上传文件
+取得上传文件
+$file = Request::file('photo');
+
+确认文件是否有上传
+if (Request::hasFile('photo'))
+{
+    //
+}
+
+确认上传的文件是否有效
+if (Request::file('photo')->isValid())
+{
+    //
+}
+
+移动上传的文件
+Request::file('photo')->move($destinationPath);
+Request::file('photo')->move($destinationPath, $fileName);
+
+其他的请求信息
+取得请求 URI
+$uri = Request::path();
+
+判断一个请求是否使用了 AJAX
+if (Request::ajax())
+{
+    //
+}
+
+取得请求方法
+
+$method = Request::method();
+if (Request::isMethod('post'))
+{
+    //
+}
+
+确认请求路径是否符合特定格式
+if (Request::is('admin/*'))
+{
+    //
+}
+
+取得请求 URL
+$url = Request::url();
+
+
+
+
+
+------------------------------------------------------------响应--------------------------------------------
+
+基本响应
+
+
+从路由返回字串
+Route::get('/', function()
+{
+    return 'Hello World';
+});
+建立自定义响应
+return (new Response($content, $status))
+              ->header('Content-Type', $value);
+return response($content, $status)
+              ->header('Content-Type', $value);
+
+在响应送出视图
+return response()->view('hello')->header('Content-Type', $type);
+附加 Cookies 到响应
+return response($content)->withCookie(cookie('name', 'value'));
+//给响应添加cookie
+Route::get('example/test23', function(){
+    return Response::view('test22')->withCookie(Cookie::make('key', 'this is value'));
+链式方法
+return response()->view('hello')->header('Content-Type', $type)
+                 ->withCookie(cookie('name', 'value'));
+
+
+重定向
+
+return redirect('user/login');
+
+返回重定向并且加上快闪数据（ Flash Data ），通常重定向至新的 URL 时会一并将数据存进一次性 Session
+return redirect('user/login')->with('message', 'Login Failed');
+
+返回根据前一个 URL 的重定向
+return redirect()->back();
+return redirect()->back()->withInput();
+
+返回根据路由名称的重定向
+return redirect()->route('login');
+
+返回根据路由名称的重定向，并给予路由参数赋值
+return redirect()->route('profile', [1]);
+
+返回根据路由名称的重定向，并给予特定名称路由参数赋值
+return redirect()->route('profile', ['user' => 1]);
+
+返回根据控制器动作的重定向
+return redirect()->action('App\Http\Controllers\HomeController@index');
+return redirect()->action('App\Http\Controllers\UserController@profile', [1]);
+return redirect()->action('App\Http\Controllers\UserController@profile', ['user' => 1]);
+
+
+
+其他响应
+建立 JSON 响应
+json 方法会自动将响应头的 Content-Type 配置为 application/json：
+return response()->json(['name' => 'Abigail', 'state' => 'CA']);
+
+建立 JSONP 响应
+return response()->json(['name' => 'Abigail', 'state' => 'CA'])
+                 ->setCallback($request->input('callback'));
+
+建立文件下载的响应
+return response()->download($pathToFile);
+return response()->download($pathToFile, $name, $headers);
+return response()->download($pathToFile)->deleteFileAfterSend(true);
+
+
+
+
+----------------------------------------------------------视图----------------------------------------------------------------
+<html>
+    <body>
+        <h1>Hello, <?php echo $name; ?></h1>
+    </body>
+</html>
+
+Route::get('/', function()
+{
+    return view('greeting', ['name' => 'James']);
+});
+
+resources/views/admin/profile.php
+return view('admin.profile', $data);
+
+传递数据到视图
+// 使用传统的方法
+$view = view('greeting')->with('name', 'Victoria');
+// 使用魔术方法
+$view = view('greeting')->withName('Victoria');
+
+$view = view('greetings', $data);
+$data 必须是 键/值 对应的数组数据
+{{ $key }} 会取得 $data['key'] 对应的数据
+
+    public function about() {
+        return view('pages.about')->with(['first' => 'Foo', 'second' => 'Bar']);
+    }
+
+
+    public function about() {
+        return view('pages.about')->with(['first' => 'Foo', 'second' => 'Bar']);
+    }
+
+    public function about() {
+        $data['first'] = 'Foo';
+        $data['second'] = 'Bar';
+        return view('pages.about', $data);
+    }
+
+
+    public function about() {
+        $first = 'Foo';
+        $second = 'Bar';
+        return view('pages.about', compact('first', 'second'));
+    }
+
+
+把数据共享给所有视图
+1.view 辅助方法；
+view()->share('data', [1, 2, 3]);
+View::share('data', [1, 2, 3]);
+通常你应该在服务提供者的 boot 方法内使用 share 方法
+
+2.Illuminate\Contracts\View\Factory 合约 (contract)；
+3.在视图组件 (view composer) 内使用通配符。
+
+
+确认视图是否存在
+if (view()->exists('emails.customer'))
+{
+    //
+}
+
+从一个文件路径产生视图
+return view()->file($pathToFile, $data);
+
+
+视图组件
+
+
+
+
+
+-------------------------------------------------------------------服务提供者------------------------------------------------------
+服务提供者是你的应用程序配置中心所在。
+ config/app.php      providers 数组
+
+
+php artisan make:provider RiakServiceProvider
+
+
+
+
+
+
+
+-----------------------------------------------------------数据库--------------------------------------------------------
+$results = DB::select('select * from users where id = ?', [1]);
+$results = DB::select('select * from users where id = :id', ['id' => 1]);
+DB::insert('insert into users (id, name) values (?, ?)', [1, 'Dayle']);
+DB::update('update users set votes = 100 where name = ?', ['John']);
+DB::delete('delete from users');
+DB::statement('drop table users');
+DB::listen(function($sql, $bindings, $time)
+{
+    //
+});
+
+数据库事务处理
+DB::transaction(function()
+{
+    DB::table('users')->update(['votes' => 1]);
+
+    DB::table('posts')->delete();
+});
+DB::beginTransaction();
+DB::rollback();
+DB::commit();
+
+
+若要使用多个连接，可以通过 DB::connection 方法取用：
+$users = DB::connection('foo')->select(...);
+
+你也可以取用原始底层的 PDO 实例：
+$pdo = DB::connection()->getPdo();
+
+有时候你可能需要重新连接到特定的数据库：
+DB::reconnect('foo');
+
+
+max_connections 
+关闭特定的数据库连接
+DB::disconnect('foo');
+
+启用日志
+DB::connection()->enableQueryLog();
+
+得到执行过的查找纪录数组
+$queries = DB::getQueryLog();
+
+
+查询构造器
+
+从数据表中取得所有的数据列
+$users = DB::table('users')->get();
+foreach ($users as $user)
+{
+    var_dump($user->name);
+}
+
+
+从数据表中分块查找数据列
+DB::table('users')->chunk(100, function($users)
+{
+    foreach ($users as $user)
+    {
+        //
+    }
+});
+
+通过在 闭包 中返回 false 来停止处理接下来的数据列：
+DB::table('users')->chunk(100, function($users)
+{
+    //
+    return false;
+});
+
+从数据表中取得单一数据列
+$user = DB::table('users')->where('name', 'John')->first();
+var_dump($user->name);
+
+从数据表中取得单一数据列的单一字段
+$name = DB::table('users')->where('name', 'John')->pluck('name');
+
+取得单一字段值的列表
+$roles = DB::table('roles')->lists('title');
+$roles = DB::table('roles')->lists('title', 'name'); //为返回的数组指定自定义键值
+
+指定查询子句 (Select Clause)
+$users = DB::table('users')->select('name', 'email')->get();
+$users = DB::table('users')->distinct()->get();
+$users = DB::table('users')->select('name as user_name')->get();
+
+增加查询子句到现有的查询中
+$query = DB::table('users')->select('name');
+$users = $query->addSelect('age')->get();
+
+使用 where 及运算符
+$users = DB::table('users')->where('votes', '>', 100)->get();
+$users = DB::table('users')
+                    ->where('votes', '>', 100)
+                    ->orWhere('name', 'John')
+                    ->get();
+$users = DB::table('users')
+                    ->whereBetween('votes', [1, 100])->get();
+$users = DB::table('users')
+                    ->whereNotBetween('votes', [1, 100])->get();
+$users = DB::table('users')
+                    ->whereIn('id', [1, 2, 3])->get();
+$users = DB::table('users')
+                    ->whereNotIn('id', [1, 2, 3])->get();
+$users = DB::table('users')   
+                    ->whereNull('updated_at')->get();   //找到未配置的值的数据
+
+$admin = DB::table('users')->whereId(1)->first();
+$john = DB::table('users')
+                    ->whereIdAndEmail(2, 'john@doe.com')
+                    ->first();
+$jane = DB::table('users')
+                    ->whereNameOrAge('Jane', 22)
+                    ->first();
+
+排序(Order By)、分群(Group By) 及 Having
+$users = DB::table('users')
+                    ->orderBy('name', 'desc')
+                    ->groupBy('count')
+                    ->having('count', '>', 100)
+                    ->get();
+
+偏移(Offset) 及 限制(Limit)
+$users = DB::table('users')->skip(10)->take(5)->get();
+
+
+基本的 Join 语法
+DB::table('users')
+            ->join('contacts', 'users.id', '=', 'contacts.user_id')
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.id', 'contacts.phone', 'orders.price')
+            ->get();
+DB::table('users')
+        ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+        ->get();
+
+DB::table('users')
+        ->join('contacts', function($join)
+        {
+            $join->on('users.id', '=', 'contacts.user_id')->orOn(...);
+        })
+        ->get();
+DB::table('users')
+        ->join('contacts', function($join)
+        {
+            $join->on('users.id', '=', 'contacts.user_id')
+                 ->where('contacts.user_id', '>', 5);
+        })
+        ->get();
+
+高级 Wheres
+DB::table('users')
+            ->where('name', '=', 'John')
+            ->orWhere(function($query)
+            {
+                $query->where('votes', '>', 100)
+                      ->where('title', '<>', 'Admin');
+            })
+            ->get();
+select * from users where name = 'John' or (votes > 100 and title <> 'Admin')
+
+Exists 语法
+DB::table('users')
+            ->whereExists(function($query)
+            {
+                $query->select(DB::raw(1))
+                      ->from('orders')
+                      ->whereRaw('orders.user_id = users.id');
+            })
+            ->get();
+select * from users
+where exists (
+    select 1 from orders where orders.user_id = users.id
+)
+
+
+聚合
+$users = DB::table('users')->count();
+$price = DB::table('orders')->max('price');
+$price = DB::table('orders')->min('price');
+$price = DB::table('orders')->avg('price');
+$total = DB::table('users')->sum('votes');
+
+使用原生表达式
+$users = DB::table('users')
+                     ->select(DB::raw('count(*) as user_count, status'))
+                     ->where('status', '<>', 1)
+                     ->groupBy('status')
+                     ->get();
+
+添加
+添加数据进数据表
+DB::table('users')->insert(
+    ['email' => 'john@example.com', 'votes' => 0]
+);
+
+添加自动递增 (Auto-Incrementing) ID 的数据至数据表
+$id = DB::table('users')->insertGetId(
+    ['email' => 'john@example.com', 'votes' => 0]
+);
+
+添加多个数据进数据表
+DB::table('users')->insert([
+    ['email' => 'taylor@example.com', 'votes' => 0],
+    ['email' => 'dayle@example.com', 'votes' => 0]
+]);
+
+更新数据表中的数据
+DB::table('users')
+            ->where('id', 1)
+            ->update(['votes' => 1]);
+
+自增或自减一个字段的值
+DB::table('users')->increment('votes');
+DB::table('users')->increment('votes', 5);
+DB::table('users')->decrement('votes');
+DB::table('users')->decrement('votes', 5);
+
+DB::table('users')->increment('votes', 1, ['name' => 'John']);
+
+删除数据表中的数据
+DB::table('users')->where('votes', '<', 100)->delete();
+
+删除数据表中的所有数据
+DB::table('users')->delete();
+
+清空数据表
+DB::table('users')->truncate();
+
+Unions
+$first = DB::table('users')->whereNull('first_name');
+$users = DB::table('users')->whereNull('last_name')->union($first)->get();
+
+
+
+
+
+---------------------------------------------------环境与配置------------------------------------------------------------------
+
+
+
+'host' => env('DB_HOST', 'localhost'),
+		//env()方法就是读取.env文件中的配置项，它的第二个参数是默认值。
+根目录下的.gitignore文件，可以看到.env默认是不会被提交的
+
+在Application实例中，可以通过environment()方法来读取目前应用程序的环境配置：
+    $environment = $app->environment();
+
+你也可以传递参数至 environment() 方法中，来确认目前的环境是否与参数相符合：
+    if ($app->environment('local'))
+    {
+        // The environment is local
+    }
+     
+    if ($app->environment('local', 'staging'))
+    {
+        // The environment is either local OR staging...
+    }
+
+也能通过 App facade 或者辅助方法 app() 取得应用程序实例：
+    $environment = app()->environment();
+    $environment = App::environment();
+
+维护模式
+启用维护模式  php artisan down
+关闭维护模式  php artisan up
+维护模式响应的默认模板放在 resources/views/errors/503.blade.php。
+
+
+
+
+------------------------------------------------数据库迁移 Migrations ----------------------------------------------------
+
+up(): 创建、更改数据库
+down():回滚操作
+
+创建迁移文件
+使用 Artisan CLI 的 make:migrate 命令建立迁移文件：
+D:\wamp\www\laravel5>php artisan help make:migration
+
+ php artisan make:migration create_users_table --create=users //创建users表
+ php artisan make:migration add_votes_to_users_table --table=users //给users表增加votes字段
+
+执行所有未执行的迁移
+php artisan migrate
+注意: 如果在执行迁移时发生「class not found」错误，试着先执行 composer dump-autoload 命令后再进行一次。
+
+在线上环境 (Production) 中强制执行迁移
+php artisan migrate --force
+
+回滚上一次的迁移
+    php artisan migrate:rollback
+回滚所有迁移
+    php artisan migrate:reset
+回滚所有迁移并且再执行一次
+    php artisan migrate:refresh
+    php artisan migrate:refresh --seed
+
+
+执行数据迁移：
+D:\wamp\www\laravel5>php artisan migrate
+执行回滚操作：
+D:\wamp\www\laravel5>php artisan migrate:rollback
+
+
+
+
+---------------------------------------------Eloquent ORM --------------------------------------------------------
+从建立一个 Eloquent 模型开始
+模型通常放在 app 目录下，但是您可以将它们放在任何地方，只要能通过 composer.json 自动载入。
+所有的 Eloquent 模型都继承于Illuminate\Database\Eloquent\Model
+
+定义一个 Eloquent 模型
+php artisan make:model Article
+
+命令行工具 tinker 插入与读取数据
+php artisan tinker
+
+插入数据
+$article = new App\Article;
+ $article->published_at = Carbon\Carbon::now();
+$article->toArray();
+$article->save();
+
+查看
+App\Article::all()->toArray();
+
+更新数据
+$article->title = 'My updated First Article';
+$article->save();
+ App\Article::all()->toArray();
+
+数据查询
+$article = App\Article::find(1);
+$article->toArray();
+ $article->title;
+
+$article = App\Article::where('body', 'Lorem ipsum')->get();      //返回的是一个集合(Eloquent Collection)
+$article = App\Article::where('body', 'Lorem ipsum')->first();	//返回的是一个普通的Article类。
+
+批量赋值
+$article = App\Article::create(['title' => 'New Article', 'body' => 'New Body', 'published_at' => Carbon\Carbon::now()]);
+
+更改数据库
+ $article->update(['body' => 'Updated Again']);
+
+
+ $article = Article::findOrFail($id);
+
+<a href="/articles/{{$article->id}}">{{ $article->title }}</a>
+<a href="{{ action('ArticlesController@show', [$article->id]) }}">{{ $article->title }}</a>
+<a href="{{ url('/articles', $article->id) }}">{{ $article->title }}</a>
+
+
+
+
+----------------------------------------------------------Forms 表单 --------------------------------------------------------
+
+引入HTML库依赖
+    composer require illuminate/html
+修改 config/app.php 文件，把库注册到 Laravel 中。在 providers 字段中添加 HtmlServiceProvider
+'Illuminate\Html\HtmlServiceProvider',
+通过 aliases 字段为刚才注册的 Provider 设置别名：
+'Form'      => 'Illuminate\Html\FormFacade',
+'Html'      => 'Illuminate\Html\HtmlFacade',
+
+
+//方法一
+ $articles = Article::latest('published_at')->get();
+//方法二
+$articles = Article::orderBy('published_at', 'desc')->get();
+
+
+    {!! Form::open() !!}
+        <div class="form-group">
+            {!! Form::label('title', 'Title:') !!}
+            {!! Form::text('title', null, ['class' => 'form-control']) !!}
+        </div>
+ 
+        <div class="form-group">
+            {!! Form::label('body', 'Body:') !!}
+            {!! Form::textarea('body', null, ['class' => 'form-control']) !!}
+        </div>
+ 
+        <div class="form-group">
+            {!! Form::submit('Add Article', ['class' => 'btn btn-primary form-control']) !!}
+        </div>
+    {!! Form::close() !!}
+
+
+
+用户密码加密：
+bcrypt()  或Hash::make()
+
+
+
+路由和URL生成
+首先创建一个路由：
+Route::get('articles',['uses'=>'ArticlesController@index','as'=>'articles.index']);
+
+1.简单模式
+<a href="{{ url('/articles') }}">链接</a>
+// or
+<a href="{{ URL::to('/articles') }}">链接</a>
+
+2.路由模式
+URL::route('articles.index')
+这种方式是指定匹配注册路由时的as参数，得到注册的uri
+
+3.控制器动作模式
+URL::action('ArticlesController@index')
+这种方式是根据注册路由时 'uses' 参数，自动生成映射到控制器方法的uri，规则同Route::controller()
+
+
+
+
+页面跳转：
+
+跳转到特定uri：
+return Redirect::to('user/profile');
+
+附带特定的状态码如301/302进行跳转：
+return Redirect::to('user/profile', 301);
+
+发起https跳转：
+return Redirect::to_secure('user/profile');
+
+返回应用根目录：
+return Redirect::home();
+
+返回上一个动作uri的跳转：
+return Redirect::back();
+
+跳转到一个命名路由：
+return Redirect::to_route('profile');
+
+跳转到某一个controller类中的方法：
+return Redirect::to_action('home@index');

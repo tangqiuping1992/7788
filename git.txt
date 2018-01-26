@@ -1,0 +1,29 @@
+git remote add origin git@github.com:tangqiuping1992/7788.git 关联远程仓库
+git push  -u origin master  推送到远程仓库
+git log  --pretty=oneline    查看日志一行显示
+git reflog  查看所有命令的日志
+git config --global user.name 'tangqiuping1992'
+git config --global user.email ' '
+git checkout  -- file 放弃对文件的修改 还未add
+git checkout -b dev 创建并切换到分支dev　　＝＝　git branch dev  +  git checkout dev
+git branch -d dev 删除dev分支
+git branch  查看当前分支
+git commit  -m ' test'
+git merge dev 将dev的内容合并到当前分支
+git merge --no-ff -m "merge with no-ff" dev
+git stash 暂存
+git stash pop  恢复的同时把stash内容也删了  = git stash apply  + git stash drop
+git stash list
+git stash apply stash@{0}
+git log --graph --pretty=oneline --abbrev-commit
+git branch -D feature-vulcan  强行删除分支
+git tag v1.0  创建标签
+git tag 查看所有标签
+git tag v0.9 6224937  给某个commit id 打上标签
+git show v0.9  tag的详细说明
+git tag -a v0.1 -m "version 0.1 released" 3628164    -a指定标签名，-m指定说明文字
+git tag -d v0.1 删除标签
+git push origin v1.0  推送标签v1.0
+git push origin --tags 推送所有标签
+git tag -s <tagname> -m "blablabla..."可以用PGP签名标签
+git push origin :refs/tags/v0.9  从远程删除标签

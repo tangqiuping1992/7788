@@ -1,0 +1,39 @@
+一、前端： 
+框架： 
+	vue.js、React.js、angular.js、node.js、sea.js、ext.js
+前端构建工具：
+	Grunt、gulp、WebPack
+css预处理：
+	Less、Sass、PostCss、stylus
+代码管理工具：
+	Git、Svn
+协议：
+	HTTP/TCP
+数据图表工具：
+	ECharts、 HighCharts、D3.js
+画图： 
+	Canvas、Svg
+其他：
+	DOM、Json、Ajax异步机制、组件开发
+
+
+二、PHP后台
+开发环境：
+	LAMP、LNMP、
+框架：
+	 laravel、thinkphp、yii2、CI
+数据库：
+	mongodb(高级查询)、mysql、oracle、redis
+缓存机制：
+	memcache、redis
+脚本编程：
+	python、shell
+二次开发框架：
+	织梦CMS、PHPCMS、dedecms、V9、EcShop
+引擎：
+	smarty
+其他：
+	linux常用操作命令、Elasticsearch搜索、接口封装、文件的上传下载
+
+	
+

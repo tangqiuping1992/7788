@@ -1,0 +1,67 @@
+svn st
+svn add resources/views/partials/header_2.blade.php
+svn st
+svn commit -m 'create route controllers views'
+svn log --stop-on-copy
+svn info
+svn sw svn://192.168.10.80/pro242/trunk
+svn merge -r 11:15 svn://192.168.10.80/pro242/branches/zhl-1
+svn commit -m 'merge zhl-1'
+svn up
+
+解决问题
+svn resolve --accept working public/assets/css/UserSystem/index_survey.css
+创建分支
+svn cp svn://192.168.10.80/pro242/trunk svn://192.168.10.80/pro242/branches/ren-13 -m "create ren-13"
+切换分支
+svn sw svn://192.168.10.80/pro242/branches/zhl-13
+删除目录
+rm -rf guo
+mkdir guo
+cd guo
+检出分支
+svn checkout svn://192.168.10.80/pro242/branches/guo-13 .
+
+
+
+缓存问题：
+php.ini里的配置：
+revalidate_freq=1
+opcache.enable=0
+opcache.enable_cli=0
+
+
+
+
+cd /home/WXHA_G001/pylib/
+./web_db_middleware.py
+
+es数据表结构目录：
+more  /CySec_H008/conf/chi_index.xml
+
+Connecting to 192.168.10.212:22...
+Connection established.
+To escape to local shell, press 'Ctrl+Alt+]'.
+
+Last login: Tue May  2 10:45:28 2017 from 192.168.10.174
+[root@DB ~]# service httpd start
+Starting httpd:                                            [  OK  ]
+[root@DB ~]# nohup redis-server >/dev/null 2>&1&
+[1] 3646
+You have new mail in /var/spool/mail/root
+[root@DB ~]# nohup /home/
+deco_test.py  messageDate/  WXHA_G001/    wxha_package/ 
+[root@DB ~]# nohup /home/WXHA_G001/pylib/w
+web_db_middleware.py       web_middleware/            web_page.py                web_page.pyc               
+web_db_middleware.py.0317  web_notify/                web_page.py.0317           wxha_io/                   
+[root@DB ~]# nohup /home/WXHA_G001/pylib/web_db_middleware.py >/dev/null 2>&1&
+[2] 3652
+[root@DB ~]# 
+
+
+[root@DB html]# chown -R apache:apache storage/            apache权限
+
+
+开启防火墙
+vi /etc/sysconfig/iptables
+service iptables restart

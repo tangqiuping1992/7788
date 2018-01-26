@@ -1,0 +1,132 @@
+数据库
+集合person
+
+简单的增删改查
+insert：
+	db.person.insert({"name":"jack","age":20})
+find:
+	"_id":数据库默认加的guid，保证数据的唯一性。
+	db.person.find()
+	db.person.find({"name":"jack"})
+update:
+	第一个参数是查找的条件，第二个参数是更新的值
+	db.person.update({"name":"jack"},{"name":"jack","age":38})
+remove:
+	db.remove({"name":"jack"})
+
+
+
+
+细说增删改查
+insert操作：
+单条插入
+批量插入
+
+find操作
+1. > , >= , < , <= , != , =
+"$gt","$gte","$lt","$lte","$ne","没有特殊关键字"
+db.user.find({"age":{$gt:22}})
+db.user.find({"age":{$lt:22}})
+db.user.find({"age":20})
+
+2. and , or , in , notin
+"无关键字","$or","$in","$nin"
+db.user.find({"name":"jack","address.province":"anhui"})
+db.user.find({$or:[{"address.province":"anhui"},{"address,province":"guangdong"}]})
+db.user.find({"address.province":{$in["anhui","guangdong"]}})
+db.user.find({"address.province":{$nin["anhui","guangdong"]}})
+
+3.正则表达式匹配
+db.user.find({"name":/^j/,"name":/e$/})
+
+4.$where  value就是js
+db.user.find({$where:function(){return this.name=='jack'}})	
+
+update操作
+1.整体更新
+var model = db.user.findOne({"name":"jack"})
+model.age=30
+db.user.update({"name":"jack"},model)
+
+2.局部更新
+$inc  $set 修改器
+db.user.update({"name":"jack"},{$inc:{"age":30}})
+db.user.update({"name":"jack"},{$set:{"age":10}})
+
+3.upsert操作
+如果没有查到，就在数据库里新增一条，将update第三个参数设为true
+db.usesr.update({"name":"jackson"},{$inc:{"age":1}},true)
+
+4.批量更新
+在mongodb中如果匹配多条，默认的情况下只更新第一条，
+那么如果我们有需求必须批量更新，那么在mongodb中实现也是很简单
+的，在update的第四个参数中设为true即可。
+
+
+remove操作
+略
+
+
+
+
+细说高级操作
+聚合 ：count，distinct，group，mapReduce。
+1.count
+db.person.count()
+db.person.count({"age":20})
+2.distinct
+db.user.distinct("age")
+3.group
+db.person.group({
+      "key":{"age":true}
+      "initial":{"person":[]},
+      "$reduce":function(cur,prev){
+	prev.person.push(cur,name);
+	}
+})
+…………
+
+
+
+游标
+var list = db.person.find();
+list.forEach(function(x){
+	print(x.name);
+})
+var single=db.person.find().sort({"name",1}).skip(2).limit(2);
+
+
+
+
+索引操作
+性能分析函数 (explain)
+db.person.find({"name":"hxc"+10000}).explain()
+
+cursor:       这里出现的是”BasicCursor",什么意思呢，就是说这里的查找采用的是“表扫描”，也就是顺序查找，很悲催啊。
+nscanned:  这里是10w，也就是说数据库浏览了10w个文档，很恐怖吧，这样玩的话让人受不了啊。
+n:             这里是1，也就是最终返回了1个文档。
+millis:        这个就是我们最最最....关心的东西，总共耗时114毫秒。
+
+建立索引(ensureIndex) 
+db.person.ensureIndex({"name":1})
+db.person.find({"name":"hxc"+10000}).explain()
+
+cursor:       这里出现的是”BtreeCursor"，这么牛X，mongodb采用B树的结构来存放索引，索引名为后面的“name_1"。
+nscanned:  我擦，数据库只浏览了一个文档就OK了。
+n:             直接定位返回。
+millis:        看看这个时间真的不敢相信，秒秒杀。
+
+
+唯一索引
+db.person.ensureIndex({"name":1},{"unique":true})。
+
+组合索引
+db.person.ensureIndex({"name":1,"birthday":1})
+db.person.ensureIndex({"birthday":1,"name":1})
+
+删除索引
+db.person.dropIndexes("name_1")
+db.person.getIndexes()
+
+http://www.cnblogs.com/egger/archive/2013/06/14/3135847.html
+https://php-art.com/

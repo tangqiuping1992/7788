@@ -1,0 +1,599 @@
+python
+应用于：
+1、网络应用（网站、后台服务）
+2、日常小工具
+3、包装其他语言开发的程序
+缺点：
+1、运行慢
+2、代码不能加密
+
+解释器：
+1、CPython： >>>提示符 （最通用）
+2、IPython： In [序号]: 提示符
+3、PyPy：提高执行速度
+4、Jython：运行在Java平台上的Python解释器，可以直接把Python代码编译成Java字节码执行
+5、IronPython：运行在微软.Net平台上的Python解释器，可以直接把Python代码编译成.Net的字节码
+
+注：exit()并回车，就退出了Python交互模式，并回到命令行模式
+
+数据类型：
+1、整数
+2、浮点数
+3、字符串 'I\'m \"OK\"!'    I'm "OK"!   r''表示''内部的字符串默认不转义   print(r'\\\t\\') =>\\\t\\
+   注：'''.......'''可进行多行输入
+4、布尔值 True False  (and or not)
+5、空值 None
+6、变量
+7、常量：通常用大写命名常量，如：PI
+注：两种除法： /  结果是浮点数              // 结果只保留整数部分
+
+ASCII编码是1个字节，而Unicode编码通常是2个字节
+ord(): 获取字符的整数表示 ord('中') => 20013
+chr(): 把编码转为对应的字符 chr(20013) => '中'
+len(): 计算str中包含的字符数
+
+注：为了让它按UTF-8编码读取，我们通常在文件开头写上这两行：
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+%： 格式化字符串
+%s：字符串
+%d：整数
+%f: 浮点数
+%x: 十六进制整数
+
+print('%2d-%04d' % (3, 1))   3-0001
+print('%.3f' % 3.1415926)   3.142
+说明：
+1、%d:  %后如果只有一位数字，这位数字代表这个变量占几个位，%后若有2个数字，第一个数字代表用什么占位，第二个代表占几位
+2、%f:  %后.3代表保留三位数
+
+format(): 格式化字符串
+ 'Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125)  => 'Hello, 小明, 成绩提升了 17.1%'
+
+
+list: 数组
+classmates = ['Michael', 'Bob', 'Tracy']
+长度：len(classmates)
+     classmates[1]：第二个元素
+     classmates[-1]：最后一个元素
+classmates.append('Adam')： 添加元素到末尾
+classmates.insert(1, 'Jack')：添加元素到指定位置
+classmates.pop()：删除末尾元素
+classmates.pop(i)：删除指定位置元素
+
+tuple：和list非常类似，但是tuple一旦初始化就不能修改
+classmates = ('Michael', 'Bob', 'Tracy')
+
+if/elseif/else语法：
+if <条件判断1>:
+    <执行1>
+elif <条件判断2>:
+    <执行2>
+elif <条件判断3>:
+    <执行3>
+else:
+    <执行4>
+
+
+input(): 用户输入
+birth = int(input('birth: '));
+
+range(): 生成一个整数序列，再通过list()函数可以转换为list
+list(range(5))  // [0, 1, 2, 3, 4]  小于5
+
+for 循环：
+sum = 0
+for x in range(101):
+    sum = sum + x
+print(sum)
+
+while循环：
+sum = 0
+n = 99
+while n > 0:
+    sum = sum + n
+    n = n - 2
+print(sum)
+
+dict: 
+d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}     // d['Michael']
+'Thomas' in d  //通过in判断key是否存在
+dict提供的get()方法，如果key不存在，可以返回None，或者自己指定的value:
+ d.get('Thomas', -1) //如没有Thomas这个key，则返回-1
+ d.pop('Bob')   //删除一个key，用pop(key)方法
+
+和list比较，dict有以下几个特点：
+查找和插入的速度极快，不会随着key的增加而变慢；
+需要占用大量的内存，内存浪费多。
+
+而list相反：
+查找和插入的时间随着元素的增加而增加；
+占用空间小，浪费内存很少。
+
+
+set:
+set和dict类似，也是一组key的集合，但不存储value
+s = set([1, 1, 2, 2, 3, 3])   //{1, 2, 3}  重复元素在set中自动被过滤
+add(key): 添加元素到set中
+remove(key): 删除元素
+
+
+函数： 
+abs()
+max()
+int()/float()/str()/bool()
+isinstance(object, classinfo)  //判断是不是属于一个类型
+raise: 抛出异常
+
+定义函数：
+def nop():
+	pass
+
+
+关键字参数：
+def person(name, age, **kw):
+    print('name:', name, 'age:', age, 'other:', kw)
+
+person('Bob', 35, city='Beijing')   //name: Bob age: 35 other: {'city': 'Beijing'}
+person('Adam', 45, gender='M', job='Engineer')  //name: Adam age: 45 other: {'gender': 'M', 'job': 'Engineer'}
+
+切片：
+ L = ['Michael', 'Sarah', 'Tracy', 'Bob', 'Jack']
+ L[0:3] === L[:3]     //从索引0开始取，直到索引3为止，但不包括索引3   第一个索引是0，还可以省略
+
+ L = list(range(100))
+ L[:10]     //前10个数
+ L[-10:]	//后10个数
+ L[10:20]	//前11-20个数
+ L[:10:2]   //前10个数，每两个取一个   [0, 2, 4, 6, 8]
+ L[::5]		//所有数，每5个取一个  [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
+ L[:]		//复制一个list
+
+ 判断是否可迭代：
+  from collections import Iterable
+  isinstance('abc', Iterable)  //True
+  isinstance([1,2,3], Iterable) //True
+  isinstance(123, Iterable)  //False
+
+   for i, value in enumerate(['A', 'B', 'C']):    //enumerate函数可以把一个list变成索引-元素对
+   		print(i, value)  
+
+
+列表生成式：
+[x * x for x in range(1, 11) if x % 2 == 0]         //[4, 16, 36, 64, 100]
+[m + n for m in 'ABC' for n in 'XYZ'] 				//['AX', 'AY', 'AZ', 'BX', 'BY', 'BZ', 'CX', 'CY', 'CZ']
+
+生成器：
+g = (x * x for x in range(10))
+创建L和g的区别仅在于最外层的[]和()，L是一个list，而g是一个generator。
+如果一个函数定义中包含yield关键字，那么这个函数就不再是一个普通函数，而是一个generator
+
+可迭代对象：
+可以直接作用于for循环的对象统称为可迭代对象： list、tuple、dict、set、str、generator
+迭代器：
+可以被next()函数调用并不断返回下一个值的对象称为迭代器
+
+生成器都是Iterator对象，但list、dict、str虽然是Iterable，却不是Iterator。
+把list、dict、str等Iterable变成Iterator可以使用iter()函数：
+isinstance(iter('abc'), Iterator)   //True
+isinstance(iter([]), Iterator)   //True
+
+高阶函数：
+map()： 接收两个参数，一个是函数，一个是Iterable，map将传入的函数依次作用到序列的每个元素，并把结果作为新的Iterator返回
+ 	list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9]))  //['1', '2', '3', '4', '5', '6', '7', '8', '9']
+reduce(): 必须接收两个参数，reduce把结果继续和序列的下一个元素做累积计算
+    from functools import reduce
+    def add(x, y):
+        return x * 10 + y
+    reduce(add, [1, 3, 5, 7, 9])  //13579
+filter():接收一个函数和一个序列, filter()把传入的函数依次作用于每个元素，然后根据返回值是True还是False决定保留还是丢弃该元素
+    def is_odd(n):
+        return n % 2 == 1
+    list(filter(is_odd, [1, 2, 4, 5, 6, 9, 10, 15]))
+    # 结果: [1, 5, 9, 15]
+
+    把一个序列中的空字符串删掉，可以这么写：
+    def not_empty(s):
+        return s and s.strip()
+    list(filter(not_empty, ['A', '', 'B', None, 'C', '  ']))
+    # 结果: ['A', 'B', 'C']
+
+注： 字符串str = '1234', str[::-1] = '4321'
+
+sorted():
+    sorted([36, 5, -12, 9, -21], key=abs)   //[5, 9, -12, -21, 36]
+    sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower)   //['about', 'bob', 'Credit', 'Zoo']
+    sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True)
+    //['Zoo', 'Credit', 'bob', 'about'] 反向排序, key可以是自定义的函数
+
+
+匿名函数：lambda x: x * x
+list(map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+匿名函数有个限制，就是只能有一个表达式，不用写return，返回值就是该表达式的结果。
+
+
+装饰器：在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）
+
+偏函数: int2 = functools.partial(int, base=2)
+
+
+作用域：
+特殊变量：__author__、__name__
+private：_xxx、__xxx， 不应该被直接引用
+
+
+面向对象编程：封装、继承、多态
+class Student(object):
+	def __init__(self, name, score):
+		self.name = name
+		self.score = score
+
+tips: __init__方法的第一个参数永远是self
+
+访问限制：
+私有变量： __xxx, 外部不能访问   //__name  => _Student__name
+特殊变量： __xxx__,可以直接访问
+....变量：_xxx,外部虽然可以访问，但是一般将这种变量视为私有变量，不要随意访问
+
+isinstance: 判断类型, 判断一般数据的类型，也可以判断class的类型
+isinstance('a', str)
+
+dir(): 获得一个对象的所有属性和方法
+dir('ABC')
+getattr(obj, 'x')/setattr(obj, 'y', 10)/hasattr(obj, 'y') //获取对象的属性、设置对象的属性、判断对象是否有什么属性 或者方法
+
+
+__slots__: 限制实例的属性
+__slots__ = ('name', 'age') # 用tuple定义允许绑定的属性名称
+__slots__定义的属性仅对当前类实例起作用，对继承的子类是不起作用的
+
+
+@property
+把一个getter方法变成属性，只需要加上@property就可以了
+@property本身又创建了另一个装饰器@score.setter，负责把一个setter方法变成属性赋值
+
+定制类：
+__str__(): 定义打印类的对象时的字符串   //可以定义__repr__ = __str__
+__iter__()：让一个类被用于for ... in循环
+__getitem__(): 让一个类像ist那样按照下标取出元素
+__getattr__(): 动态返回一个属性
+__call__(): 直接调用实例本身
+	class Student(object):
+	    def __init__(self, name):
+	        self.name = name
+
+	    def __call__(self):
+	        print('My name is %s.' % self.name)
+	s = Student('Michael')
+	s()   #My name is Michael.
+
+callable()： 判断一个对象是否是“可调用”对象
+
+
+枚举类：Enum()
+from enum import Enum
+Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+for name, member in Month.__members__.items():
+    print(name, '=>', member, ',', member.value)
+结果：
+Jan => Month.Jan , 1   #默认从1开始
+Feb => Month.Feb , 2
+Mar => Month.Mar , 3
+Apr => Month.Apr , 4
+May => Month.May , 5
+Jun => Month.Jun , 6
+Jul => Month.Jul , 7
+Aug => Month.Aug , 8
+Sep => Month.Sep , 9
+Oct => Month.Oct , 10
+Nov => Month.Nov , 11
+Dec => Month.Dec , 12
+
+
+type():
+def fn(self, name='world'): # 先定义函数
+     print('Hello, %s.' % name)
+Hello = type('Hello', (object,), dict(hello=fn)) # 创建Hello class
+
+
+错误处理：try...except...finally...
+当我们认为某些代码可能会出错时，就可以用try来运行这段代码，如果执行出错，则后续代码不会继续执行，而是直接跳转至错误处理代码，
+即except语句块，执行完except后，如果有finally语句块，则执行finally语句块，至此，执行完毕。(finally如果有，一定会被执行)
+如果没有错误发生，可以在except语句块后面加一个else，当没有错误发生时，会自动执行else语句
+
+logging: python内置的logging模块可以非常容易的记录错误信息
+logging.exception(e)
+程序打印完错误信息后会继续执行，并正常退出
+通过配置，logging还可以把错误记录到日志文件里，方便事后排查。
+
+
+
+调试：
+1、断言：凡是用print()来辅助查看的地方，都可以用断言（assert）来替代：
+def foo(s):
+    n = int(s)
+    assert n != 0, 'n is zero!'
+    return 10 / n
+def main():
+    foo('0')
+启动Python解释器时可以用-O参数来关闭assert: python -O err.py
+
+
+2、logging: 和assert比，logging不会抛出错误，而且可以输出到文件 (需要去详细了解)
+配置logging：
+import logging
+logging.basicConfig(level=logging.INFO)
+eg:
+logging.info('n = %d' % n)
+允许指定记录信息的级别，有debug，info，warning，error等几个级别
+指定level=INFO时，logging.debug就不起作用了
+指定level=WARNING后，debug和info就不起作用了
+logging的另一个好处是通过简单的配置，一条语句可以同时输出到不同的地方，比如console和文件
+
+3、pdb调试器：单步运行
+python -m pdb err.py
+pdb启动后：l可以查看代码，n执行下一步, 任何时候都可以输入命令 [p 变量名] 来查看变量, 输入命令q结束调试, 退出程序
+
+pdb.set_trace()
+import pdb
+在可能出错的地方放一个pdb.set_trace()，就可以设置一个断点
+程序会自动在pdb.set_trace()暂停并进入pdb调试环境，可以用命令p查看变量，或者用命令c继续运行
+
+4、IDE：Visual Studio Code、PyCharm、Eclipse+pydev插件
+
+
+单元测试!!!!!!!!!!!
+import unittest
+编写一个测试类，从unittest.TestCase继承
+以test开头的方法就是测试方法，不以test开头的方法不被认为是测试方法，测试的时候不会被执行。
+
+文档测试!!!!!!!!!!!
+
+
+
+
+文件读写
+读文件：f = open('/Users/michael/test.txt', 'r')  //若文件不存在，open()函数会抛出IOError异常
+        f.read()
+		f.close() //一旦出错，后面的f.close()就不会调用
+文件使用完毕后必须关闭，因为文件对象会占用操作系统的资源，并且操作系统同一时间能打开的文件数量也是有限的
+with open('/path/to/file', 'r') as f:
+    print(f.read())		//不必调用f.close()
+read(): 一次性读取文件的全部内容
+read(size): 设置每次最多读取size个字节的内容
+readline(): 读取一行的内容
+readlines(): 一次性读取所有内容并按行返回list
+for line in f.readlines():
+    print(line.strip()) # 把末尾的'\n'删掉
+	
+f = open('/Users/michael/test.jpg', 'rb')  //rb: 读取二进制文件
+f = open('/Users/michael/gbk.txt', 'r', encoding='gbk', errors='ignore')
+
+写文件：f = open('/Users/michael/test.txt', 'w')
+		f.write('Hello, world!')
+		f.close()
+以'w'模式写入文件时，如果文件已存在，会直接覆盖（相当于删掉后新写入一个文件）。
+如果我们希望追加到文件末尾怎么办？可以传入'a'以追加（append）模式写入
+
+
+StringIO：在内存中读写str
+ from io import StringIO
+ f = StringIO()
+ f.write('hello')
+ print(f.getvalue()) //获得写入后的str
+ 
+ f = StringIO('Hello!\nHi!\nGoodbye!') // 要读取StringIO，可以用一个str初始化StringIO，然后，像读文件一样读取
+ 
+BytesIO: 在内存中读写二进制文件
+from io import BytesIO
+f = BytesIO()
+f.write('中文'.encode('utf-8'))
+
+f = BytesIO(b'\xe4\xb8\xad\xe6\x96\x87')
+
+
+
+操作文件和目录
+import os
+os.name //posix: Linux、Unix或Mac OS X系统，   nt：Windows系统
+os.uname()  //获取详细的系统信息(Windows上不提供)
+os.environ //环境变量
+os.environ.get('key') //获取某个环境变量的值
+
+os.path.abspath('.') //查看当前目录的绝对路径
+os.path.join('/Users/michael', 'testdir')   //在某个目录下创建一个新目录，首先把新目录的完整路径表示出来
+os.mkdir('/Users/michael/testdir')		//然后创建一个目录
+os.rmdir('/Users/michael/testdir') 		//删掉一个目录
+把两个路径合成一个时，不要直接拼字符串，而要通过os.path.join()函数，这样可以正确处理不同操作系统的路径分隔符
+在Linux/Unix/Mac下，os.path.join()返回这样的字符串：part-1/part-2
+而Windows下会返回这样的字符串：part-1\part-2
+要拆分路径时，也不要直接去拆字符串，而要通过os.path.split()函数，
+这样可以把一个路径拆分为两部分，后一部分总是最后级别的目录或文件名
+os.path.split('/Users/michael/testdir/file.txt') // =>('/Users/michael/testdir', 'file.txt')
+os.path.splitext():直接让你得到文件扩展名
+os.path.splitext('/path/to/file.txt') // => ('/path/to/file', '.txt')
+
+os.rename('test.txt', 'test.py')  #对文件重命名
+os.remove('test.py')  			  #删掉文件
+
+
+序列化： Python提供了pickle模块来实现序列化
+import pickle
+d = dict(name='Bob', age=20, score=88)
+pickle.dumps(d)  		#把任意对象序列化成一个bytes
+f = open('dump.txt', 'wb')
+pickle.dump(d, f)		#把对象序列化后写入
+f.close()
+
+f = open('dump.txt', 'rb')#可以先把内容读到一个bytes
+d = pickle.load(f)		#然后反序列化出对象
+f.close()
+
+json
+import json
+d = dict(name='Bob', age=20, score=88)
+json.dumps(d)		#把Python对象变成一个JSON
+json.dumps(s, default=student2dict)
+json.dumps(s, default=lambda obj: obj.__dict__)
+
+
+进程和线程
+
+
+
+正则表达式
+import re
+re.match(r'^\d{3}\-\d{3,8}$', '010-12345')
+
+
+常用内建模块
+1、datetime
+from datetime import datetime, timedelta
+now = datetime.now() # 获取当前datetime
+utc_dt  = datetime.utcnow().replace(tzinfo=timezone.utc) # 获取当前utc datetime
+dt = datetime(2015, 4, 19, 12, 20) # 用指定日期时间创建datetime
+dt.timestamp() # 把datetime转换为timestamp
+t = dt.timestamp()
+print(datetime.fromtimestamp(t)) # 本地时间
+print(datetime.utcfromtimestamp(t)) # UTC时间
+cday = datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S') #str转换为datetime
+print(now.strftime('%a, %b %d %H:%M')) #datetime转换为str
+
+2、collections
+namedtuple: 是一个函数，它用来创建一个自定义的tuple对象
+from collections import namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+p = Point(1, 2)
+p.x  #1
+
+deque: 为了高效实现插入和删除操作的双向列表，适合用于队列和栈
+from collections import deque
+q = deque(['a', 'b', 'c'])
+q.append('x') #deque(['a', 'b', 'c', 'x'])
+q.appendleft('y') #deque(['y', 'a', 'b', 'c', 'x'])
+方法：append()和pop()、appendleft()和popleft()，可以非常高效地往头部添加或删除元素
+
+defaultdict：使用dict时，用的Key不存在，就会抛出KeyError。如果希望key不存在时，返回一个默认值，就可以用defaultdict
+from collections import defaultdict
+dd = defaultdict(lambda: 'N/A')
+dd['key1'] = 'abc'
+dd['key2'] 	#'N/A'
+
+OrderedDict：保持Key的顺序(可以实现一个先进先出的dict)
+from collections import OrderedDict
+d = dict([('a', 1), ('b', 2), ('c', 3)])
+od = OrderedDict([('a', 1), ('b', 2), ('c', 3)])  #会按照插入的顺序排列，不是Key本身排序
+
+Counter: 一个简短的计数器
+from collections import Counter
+Counter('abscsdsd') # Counter({'s': 3, 'd': 2, 'a': 1, 'b': 1, 'c': 1})
+Counter('abscsdsd').most_common(3) #取最多的前3项 [('s', 3), ('d', 2), ('a', 1)]
+
+3、urllib
+from urllib import request
+with request.urlopen('https://api.douban.com/v2/book/2129650') as f:
+    data = f.read()
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print('%s: %s' % (k, v))
+    print('Data:', data.decode('utf-8'))
+
+
+
+	
+TCP编程:TCP是建立可靠连接，并且通信双方都可以以流的形式发送数据。
+客户端：需要知道服务器的IP地址和服务器的端口号
+# 导入socket库:
+import socket
+# 创建一个socket:
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 建立连接:
+s.connect(('www.sina.com.cn', 80))
+# 发送数据:
+s.send(b'GET / HTTP/1.1\r\nHost: www.sina.com.cn\r\nConnection: close\r\n\r\n')
+# 接收数据:
+buffer = []
+while True:
+    # 每次最多接收1k字节:
+    d = s.recv(1024)
+    if d:
+        buffer.append(d)
+    else:
+        break
+data = b''.join(buffer)
+# 关闭连接:
+s.close()
+
+header, html = data.split(b'\r\n\r\n', 1)
+print(header.decode('utf-8'))
+# 把接收的数据写入文件:
+with open('sina.html', 'wb') as f:
+    f.write(html)
+
+	
+eg:
+# 导入socket库:
+import socket
+
+# 创建一个socket:
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 建立连接:
+s.connect(('127.0.0.1', 9999))
+# 接收欢迎消息:
+print(s.recv(1024).decode('utf-8'))
+for data in [b'Michael', b'Tracy', b'Sarah']:
+    # 发送数据:
+    s.send(data)
+    print(s.recv(1024).decode('utf-8'))
+s.send(b'exit')
+s.close()
+
+服务器端：服务器地址、服务器端口、客户端地址、客户端端口
+eg:
+# 导入socket库:
+import socket,threading,time
+# 创建一个socket:
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 监听端口:
+s.bind(('127.0.0.1', 9999))
+
+s.listen(5)
+print('Waiting for connection...')
+
+def tcplink(sock, addr):
+    print('Accept new connection from %s:%s...' % addr)
+    sock.send(b'Welcome!')
+    while True:
+        data = sock.recv(1024)
+        time.sleep(1)
+        if not data or data.decode('utf-8') == 'exit':
+            break
+        sock.send(('Hello, %s!' % data.decode('utf-8')).encode('utf-8'))
+    sock.close()
+    print('Connection from %s:%s closed.' % addr)
+	
+
+while True:
+    # 接受一个新连接:
+    sock, addr = s.accept()
+    # 创建新线程来处理TCP连接:
+    t = threading.Thread(target=tcplink, args=(sock, addr))
+    t.start()
+	
+	
+	
+UDP编程：相对TCP，UDP则是面向无连接的协议。	
+使用UDP协议时，不需要建立连接，只需要知道对方的IP地址和端口号，就可以直接发数据包。但是，能不能到达就不知道了。
+虽然用UDP传输数据不可靠，但它的优点是和TCP比，速度快，对于不要求可靠到达的数据，就可以使用UDP协议。
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
