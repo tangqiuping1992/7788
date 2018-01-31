@@ -1,0 +1,110 @@
+d3.js
+1、选择元素
+  d3.select(): 选择所有指定元素的第一个
+  d3.selectAll(): 选择指定元素的全部
+2、绑定数据
+  datum(): 绑定一个数据到选择集上
+  data(): 绑定一个数组到选择集上， 数组的各项值分别与选择集的各元素绑定
+3、插入元素
+  append():  body.append("p").text("append p element");  //在 body 的末尾添加一个 p 元素
+  insert():  body.insert("p","#myid").text("insert p element");  //在 body 中 id 为 myid 的元素前添加一个段落元素。
+4、删除元素
+  remove(): body.select("#myid").remove();
+  
+svg.selectAll("rect")   //选择svg内所有的矩形
+    .data(dataset)  //绑定数组
+    .enter()        //指定选择集的enter部分
+    .append("rect") //添加足够数量的矩形元素
+有数据，而没有足够图形元素的时候，使用此方法可以添加足够的元素。
+
+5、比例尺
+  d3.max()/d3.min(): 得到数组的最大值和最小值
+  var linear = d3.scale.linear().domain([min, max]).range([0, 300])
+  d3.scale.linear() 的返回值，是可以当做函数来使用的。因此，才有这样的用法：linear(0.9)。
+  
+6、坐标轴
+	var dataset = [ 2.5 , 2.1 , 1.7 , 1.3 , 0.9 ];
+	//定义比例尺
+	var linear = d3.scale.linear().domain([0, d3.max(dataset)]).range([0, 250]);
+	var axis = d3.svg.axis().scale(linear).orient('bottom').ticks(7);  
+	d3.svg.axis()：D3 中坐标轴的组件，能够在 SVG 中生成组成坐标轴的元素。
+	scale()：指定比例尺。
+	orient()：指定刻度的朝向，bottom 表示在坐标轴的下方显示。
+	ticks()：指定刻度的数量。
+	
+	svg.append("g").call(axis);  // 等同于 axis(svg.append(g));
+	
+	
+7、实现动态的方法
+****transition(): 启动过渡效果
+	.attr("fill","red")         //初始颜色为红色
+	.transition()               //启动过渡
+	.attr("fill","steelblue")   //终止颜色为铁蓝色
+****duration(): 指定过渡的持续时间,单位为毫秒。
+****ease(): 指定过渡的方式 
+	linear：普通的线性变化
+	circle：慢慢地到达变换的最终状态
+	elastic：带有弹跳的到达最终状态
+	bounce：在最终状态处弹跳几次
+****delay(): 指定延迟的时间
+
+8、update enter exit 
+update：数组与元素对应的部分
+enter：数组>元素时 数组多出的部分
+exit：元素>数组时 没有数组绑定的部分
+//选择body中的p元素
+var p = d3.select("body").selectAll("p");
+//获取update部分
+var update = p.data(dataset);
+//获取enter部分
+var enter = update.enter();
+//获取exit部分
+var exit = update.exit();
+
+9、饼状图的制作
+布局
+var pie = d3.layout.pie();
+var piedata = pie(dataset);  //得到转换后的数组
+弧生成器
+var outerRadius = 150; //外半径
+var innerRadius = 0; //内半径，为0则中间没有空白
+var arc = d3.svg.arc()  //弧生成器
+    .innerRadius(innerRadius)   //设置内半径
+    .outerRadius(outerRadius);  //设置外半径
+    
+10、path
+<path d="" stroke="red" fill="none"/>
+path元素的形状是通过属性d定义的，属性d的值是一个“命令+参数”的序列。
+命令：
+大写字母：绝对定位
+小写字母：相对定位
+
+直线命令：
+1)M:需要2个参数，分别是移动到的点的x轴和y轴的坐标(move to)
+  M x y //绝对位置
+  m dx dy //相对位置
+2)L:需要两个参数，分别是一个点的x轴和y轴坐标,画一条线段(line to)
+3)H:绘制平行线
+4)V:绘制垂直线(H和V都只带一个参数)
+5)Z:闭合路径，从当前点画一条直线到路径的起点
+<path d="M10 10 H 90 V 90 H 10 L 10 10"/>
+<!-- 利用Z命令，效果与上一句相同 -->
+<path d="M10 10 H 90 V 90 H 10 Z"/>
+
+曲线命令：
+
+1)C:三次贝塞尔曲线，(x,y)表示的是曲线的终点，(x1,y1)是起点的控制点，(x2,y2)是终点的控制点。
+  C x1 y1, x2 y2, x y
+  <path d="M10 10 C 20 20, 40 20, 50 10" stroke="black" fill="transparent"/>
+2)S:如果S命令跟在一个C命令或者另一个S命令的后面，它的第一个控制点，就会被假设成前一个控制点的对称点。
+          如果S命令单独使用，前面没有C命令或者另一个S命令，那么它的两个控制点就会被假设为同一个点。
+  S x2 y2, x y
+  <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="transparent"/>
+3)Q:二次贝塞尔曲线，只需要一个控制点，用来确定起点和终点的曲线斜率。因此它需要两组参数，控制点和终点坐标
+	Q x1 y1, x y
+	<path d="M10 80 Q 95 10 180 80" stroke="black" fill="transparent"/>
+4)T:Q命令的简写命令,在你的第一个控制点后面，可以只定义终点，就创建出一个相当复杂的曲线
+		T命令前面必须是一个Q命令，或者是另一个T命令，才能达到这种效果。
+		如果T单独使用，那么控制点就会被认为和终点是同一个点，所以画出来的将是一条直线。
+	T x y
+	<path d="M10 80 Q 52.5 10, 95 80 T 180 80" stroke="black" fill="transparent"/>
